@@ -3,7 +3,7 @@
 
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kaleria's Ikenga: Mama Go-Slow</title>
+  <title>Kaleria's Ikenga: Never Die</title>
   <style>
     canvas {
       border: 1px solid #d3d3d3;
@@ -22,15 +22,15 @@
     var followingSpeedX = 0.5;
     var followingSpeedY = 0.5;
     var spacebarCount = 0; // Keep track of the number of times spacebar is pressed
-    var threshold = 75;
+    var threshold = 50;
 
     function startGame() {
       console.log("Starting Game");
       myGamePiece = new component(50, 120, "DaMan.png", 50, 300, "image");
       sky = new component(1280, 100, "rgba(0, 0, 255, 0)", 0, 0);
-      myEnemy = new component(60, 120, "MamaGoSlow.png", 1030, 55, "image");
-      backHills = new component(1280, 180, "rgba(0, 0, 255, 0)", 0, 100);
-      myBackground = new component(1280, 720, "highway.jpg", 0, 0, "image");
+      myEnemy = new component(60, 120, "NeverDie.webp", 1030, 55, "image");
+      backHills = new component(1280, 360, "rgba(0, 0, 255, 0)", 0, 100);
+      myBackground = new component(1280, 720, "darkStreet.jpg", 0, 0, "image");
       myGameArea.start();
     }
 
@@ -50,8 +50,8 @@
           if (e.keyCode === 32 && myGamePiece.checkNear(myEnemy)) {
             resetEnemyPosition();
             spacebarCount++;
-            if (spacebarCount === 10) {
-              window.location.replace("neverDie.html"); // Reload the page after 5 spacebar presses
+            if (spacebarCount === 20) {
+              window.location.replace("3djPL.html"); // Reload the page after 5 spacebar presses
             }
           }
         })
@@ -175,18 +175,18 @@
       let dx = myGamePiece.x - myEnemy.x;
       let dy = myGamePiece.y - myEnemy.y;
 
-      if (Math.abs(dx)<300) {
+      if (Math.abs(dx)<500) {
         if (dx < 0) 
-          dx = -300;
+          dx = -500;
         else
-          dx = 300
+          dx = 500
       }
 
-      if (Math.abs(dy)<300) {
+      if (Math.abs(dy)<500) {
         if (dy < 0) 
-          dy = -300;
+          dy = -500;
         else
-          dy = 300
+          dy = 500
       }
 
       console.log("dx=" + dx + " dy=" + dy);
@@ -209,7 +209,7 @@
         myGamePiece.y = 0;
         myEnemy.x = 500;
         myEnemy.y = 500;
-        window.location.replace("mamaGoSlow.html");
+        window.location.replace("neverDie.html");
       }
 
       myGamePiece.newPos();

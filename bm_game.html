@@ -29,8 +29,8 @@
       myGamePiece = new component(50, 120, "DaMan.png", 50, 300, "image");
       sky = new component(1280, 100, "rgba(0, 0, 255, 0)", 0, 0);
       myEnemy = new component(60, 120, "BadMarket.webp", 1030, 55, "image");
-      backHills = new component(1280, 165, "rgba(0, 0, 255, 0)", 0, 100);
-      myBackground = new component(1280, 720, "Market.png", 0, 0, "image");
+      backHills = new component(1280, 300, "rgba(0, 0, 255, 0)", 0, 100);
+      myBackground = new component(1280, 720, "openMarket.jpg", 0, 0, "image");
       myGameArea.start();
     }
 
@@ -50,8 +50,8 @@
           if (e.keyCode === 32 && myGamePiece.checkNear(myEnemy)) {
             resetEnemyPosition();
             spacebarCount++;
-            if (spacebarCount === 5) {
-              window.location.replace("badMarket.html"); // Reload the page after 5 spacebar presses
+            if (spacebarCount === 7) {
+              window.location.replace("mamaGoSlow.html"); // Reload the page after 5 spacebar presses
             }
           }
         })
@@ -212,7 +212,7 @@
         myGamePiece.y = 0;
         myEnemy.x = 500;
         myEnemy.y = 500;
-        window.location.replace("mamaGoSlow.html");
+        window.location.replace("badMarket.html");
       }
 
       myGamePiece.newPos();

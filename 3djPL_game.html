@@ -3,7 +3,7 @@
 
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kaleria's Ikenga: Mama Go-Slow</title>
+  <title>Kaleria's Ikenga: Three Days' Journey Return</title>
   <style>
     canvas {
       border: 1px solid #d3d3d3;
@@ -22,15 +22,15 @@
     var followingSpeedX = 0.5;
     var followingSpeedY = 0.5;
     var spacebarCount = 0; // Keep track of the number of times spacebar is pressed
-    var threshold = 75;
+    var threshold = 400;
 
     function startGame() {
       console.log("Starting Game");
       myGamePiece = new component(50, 120, "DaMan.png", 50, 300, "image");
       sky = new component(1280, 100, "rgba(0, 0, 255, 0)", 0, 0);
-      myEnemy = new component(60, 120, "MamaGoSlow.png", 1030, 55, "image");
-      backHills = new component(1280, 180, "rgba(0, 0, 255, 0)", 0, 100);
-      myBackground = new component(1280, 720, "highway.jpg", 0, 0, "image");
+      myEnemy = new component(30, 120, "3 days journey.png", 1030, 55, "image");
+      backHills = new component(1280, 225, "rgba(0, 0, 255, 0)", 0, 100);
+      myBackground = new component(1280, 720, "PL.jpg", 0, 0, "image");
       myGameArea.start();
     }
 
@@ -50,8 +50,11 @@
           if (e.keyCode === 32 && myGamePiece.checkNear(myEnemy)) {
             resetEnemyPosition();
             spacebarCount++;
+            // Decrease the value by 25%
+            threshold = threshold * 0.75;
+            console.log(threshold);
             if (spacebarCount === 10) {
-              window.location.replace("neverDie.html"); // Reload the page after 5 spacebar presses
+              window.location.replace("gameBeaten.html"); // Reload the page after 5 spacebar presses
             }
           }
         })
@@ -145,12 +148,15 @@
 
         return (horizontalNear && verticalNear); 
       }
+
     }
+
     function resetEnemyPosition() {
       // Reset the enemy's position to a random location on the canvas
       myEnemy.x = Math.floor(Math.random() * (myGameArea.canvas.width - myEnemy.width));
       myEnemy.y = Math.floor(Math.random() * (myGameArea.canvas.height - myEnemy.height));
     }
+
     function updateGameArea() {
       myGameArea.clear();
 
@@ -175,18 +181,18 @@
       let dx = myGamePiece.x - myEnemy.x;
       let dy = myGamePiece.y - myEnemy.y;
 
-      if (Math.abs(dx)<300) {
+      if (Math.abs(dx)<400) {
         if (dx < 0) 
-          dx = -300;
+          dx = -400;
         else
-          dx = 300
+          dx = 400
       }
 
-      if (Math.abs(dy)<300) {
+      if (Math.abs(dy)<400) {
         if (dy < 0) 
-          dy = -300;
+          dy = -400;
         else
-          dy = 300
+          dy = 400
       }
 
       console.log("dx=" + dx + " dy=" + dy);
@@ -209,7 +215,7 @@
         myGamePiece.y = 0;
         myEnemy.x = 500;
         myEnemy.y = 500;
-        window.location.replace("mamaGoSlow.html");
+        window.location.replace("3djPL.html");
       }
 
       myGamePiece.newPos();
