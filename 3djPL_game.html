@@ -50,8 +50,8 @@
           if (e.keyCode === 32 && myGamePiece.checkNear(myEnemy)) {
             resetEnemyPosition();
             spacebarCount++;
-            // Decrease the value by 25%
-            threshold = threshold * 0.75;
+            // Decrease the value by 30%
+            threshold = threshold * 0.70;
             console.log(threshold);
             if (spacebarCount === 10) {
               window.location.replace("gameBeaten.html"); // Reload the page after 5 spacebar presses
