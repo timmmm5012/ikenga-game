@@ -1,7 +1,10 @@
 **Kaleria’s Ikenga**
+
 I made this game for my ELA project.
 
+
 **Controls**
+
 Arrow Key (Up)
   move up
 Arrow Key (Down)
@@ -12,6 +15,7 @@ Arrow Key (Right)
   move right
 Spacebar
   hit enemy
+
 
 **People who helped with this:**
   Eliot AdCock
