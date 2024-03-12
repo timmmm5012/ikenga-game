@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    canvas {
+      border: 1px solid #d3d3d3;
+      background-color: #f1f1f1;
+    }
+  </style>
+</head>
+
+<body onload="startGame()">
+  <script>
+
+    var myGamePiece;
+    var sky;
+    var myEnemy;
+    var backHills;
+    var followingSpeedX = 0.5;
+    var followingSpeedY = 0.5;
+    var spacebarCount = 0; // Keep track of the number of times spacebar is pressed
+    var threshold = 100;
+
+    function startGame() {
+      console.log("Starting Game");
+      myGamePiece = new component(50, 120, "DaMan.png", 50, 300, "image");
+      sky = new component(1280, 100, "rgba(0, 0, 255, 1)", 0, 0);
+      myEnemy = new component(30, 120, "3 days journey.png", 1030, 55, "image");
+      backHills = new component(700, 165, "rgba(0, 0, 255, 1)", 580, 100);
+      myBackground = new component(1280, 720, "roads.jpg", 0, 0, "image");
+      myGameArea.start();
+    }
+
+    var myGameArea = {
+      canvas: document.createElement("canvas"),
+      start: function () {
+        this.canvas.width = 1280;
+        this.canvas.height = 720;
+        this.context = this.canvas.getContext("2d");
+        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+        this.frameNo = 0;
+        this.interval = setInterval(updateGameArea, 20);
+        window.addEventListener('keydown', function (e) {
+          myGameArea.keys = (myGameArea.keys || []);
+          myGameArea.keys[e.keyCode] = true;
+          // Check if spacebar is pressed and reset enemy position if near the player
+          if (e.keyCode === 32 && myGamePiece.checkNear(myEnemy)) {
+            resetEnemyPosition();
+            spacebarCount++;
+            if (spacebarCount === 5) {
+              window.location.replace("badMarket.html"); // Reload the page after 5 spacebar presses
+            }
+          }
+        })
+        window.addEventListener('keyup', function (e) {
+          myGameArea.keys[e.keyCode] = false;
+        })
+      },
+      clear: function () {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      }
+    }
+
+    function everyinterval(n) {
+      if ((myGameArea.frameNo / n) % 1 == 0) {return true;}
+      return false;
+    }
+
+    function component(width, height, color, x, y, type) {
+      this.type = type;
+      if (type == "image") {
+        this.image = new Image();
+        this.image.src = color;
+      }
+      this.width = width;
+      this.height = height;
+      this.speedX = 0;
+      this.speedY = 0;
+      this.x = x;
+      this.y = y;
+      this.update = function () {
+        ctx = myGameArea.context;
+        if (type == "image") {
+          ctx.drawImage(this.image,
+            this.x,
+            this.y,
+            this.width, this.height);
+        } else {
+          ctx.fillStyle = color;
+          ctx.fillRect(this.x, this.y, this.width, this.height);
+        }
+      }
+      this.newPos = function () {
+        this.x += this.speedX;
+        this.y += this.speedY;
+      }
+      this.checkCollision = function (otherObject) {
+        let myLeft = this.x;
+        let myRight = this.x + (this.width);
+        let myTop = this.y;
+        let myBottom = this.y + (this.height);
+
+        let otherLeft = otherObject.x;
+        let otherRight = otherObject.x + (otherObject.width);
+        let otherTop = otherObject.y;
+        let otherBottom = otherObject.y + (otherObject.height);
+
+        let collision = !((myBottom < otherTop) ||
+          (myTop > otherBottom) ||
+          (myRight < otherLeft) ||
+          (myLeft > otherRight));
+
+        return collision;
+      }
+      this.checkNear = function (otherObject) {
+        let myLeft = this.x;
+        let myRight = this.x + (this.width);
+        let myTop = this.y;
+        let myBottom = this.y + (this.height);
+
+        let otherLeft = otherObject.x;
+        let otherRight = otherObject.x + (otherObject.width);
+        let otherTop = otherObject.y;
+        let otherBottom = otherObject.y + (otherObject.height);
+
+        console.log("myleft=" + myLeft + " myright=" + myRight + " mytop=" + myTop + " mybottom=" + myBottom);
+        console.log("oleft=" + otherLeft + " oright=" + otherRight + " otop=" + otherTop + " obottom=" + otherBottom);
+
+        let horizontalNear = false;
+        if (Math.abs(myRight - otherLeft) < threshold || Math.abs(myRight - otherRight) < threshold)
+          horizontalNear = true;
+        if (Math.abs(myLeft - otherRight) < threshold || Math.abs(myLeft - otherLeft) < threshold)
+          horizontalNear = true;
+        console.log(" horizontalNear=" + horizontalNear);
+
+        let verticalNear = false;
+        if (Math.abs(myBottom - otherTop) < threshold || Math.abs(myTop - otherTop) < threshold)
+          verticalNear = true;
+        if (Math.abs(myTop - otherBottom) < threshold || Math.abs(myBottom - otherBottom) < threshold)
+          verticalNear = true;
+        console.log("verticalNear=" + verticalNear);
+
+        return (horizontalNear && verticalNear); 
+      }
+
+    }
+
+    function resetEnemyPosition() {
+      // Reset the enemy's position to a random location on the canvas
+      myEnemy.x = Math.floor(Math.random() * (myGameArea.canvas.width - myEnemy.width));
+      myEnemy.y = Math.floor(Math.random() * (myGameArea.canvas.height - myEnemy.height));
+    }
+
+    function updateGameArea() {
+      myGameArea.clear();
+
+      myBackground.newPos();
+      myBackground.update();
+
+      sky.update();
+
+      if (myGamePiece.checkCollision(sky)) {
+        myGamePiece.speedX = 0;
+        myGamePiece.speedY = 2;
+      }
+
+      backHills.update();
+
+      if (myGamePiece.checkCollision(backHills)) {
+        myGamePiece.speedX = 0;
+        myGamePiece.speedY = 2;
+      }
+
+      // Calculcate direction to move
+      let dx = myGamePiece.x - myEnemy.x;
+      let dy = myGamePiece.y - myEnemy.y;
+
+      if (Math.abs(dx)<200) {
+        if (dx < 0) 
+          dx = -200;
+        else
+          dx = 200
+      }
+
+      if (Math.abs(dy)<200) {
+        if (dy < 0) 
+          dy = -200;
+        else
+          dy = 200
+      }
+
+      console.log("dx=" + dx + " dy=" + dy);
+
+
+      // Update position slowly based on speed
+      myEnemy.x += dx * followingSpeedX / 100;
+      myEnemy.y += dy * followingSpeedY / 100;
+
+      // Add bounds checking
+      if (myEnemy.x < 0) myEnemy.x = 0;
+      if (myEnemy.y < 0) myEnemy.y = 0;
+      if (myEnemy.x > myGameArea.canvas.width) myEnemy.x = myGameArea.canvas.width;
+      if (myEnemy.y > myGameArea.canvas.height) myEnemy.y = myGameArea.canvas.height;
+
+      myEnemy.update();
+
+      if (myGamePiece.checkCollision(myEnemy)) {
+        myGamePiece.x = 0;
+        myGamePiece.y = 0;
+        myEnemy.x = 500;
+        myEnemy.y = 500;
+        window.location.replace("3dj.html");
+      }
+
+      myGamePiece.newPos();
+
+      myGamePiece.speedX = 0;
+      myGamePiece.speedY = 0;
+      if (myGameArea.keys && myGameArea.keys[37]) {myGamePiece.speedX = -1;}
+      if (myGameArea.keys && myGameArea.keys[39]) {myGamePiece.speedX = 1;}
+      if (myGameArea.keys && myGameArea.keys[38]) {myGamePiece.speedY = -1;}
+      if (myGameArea.keys && myGameArea.keys[40]) {myGamePiece.speedY = 1;}
+      myGamePiece.newPos();
+      myGamePiece.update();
+    }
+  </script>
+
+</body>
+
+</html>
