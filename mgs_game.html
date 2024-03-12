@@ -28,9 +28,9 @@
       console.log("Starting Game");
       myGamePiece = new component(50, 120, "DaMan.png", 50, 300, "image");
       sky = new component(1280, 100, "rgba(0, 0, 255, 0)", 0, 0);
-      myEnemy = new component(60, 120, "BadMarket.webp", 1030, 55, "image");
+      myEnemy = new component(60, 120, "MamaGoSlow.png", 1030, 55, "image");
       backHills = new component(1280, 165, "rgba(0, 0, 255, 0)", 0, 100);
-      myBackground = new component(1280, 720, "Market.png", 0, 0, "image");
+      myBackground = new component(1280, 720, "highway.jpg", 0, 0, "image");
       myGameArea.start();
     }
 
@@ -51,7 +51,7 @@
             resetEnemyPosition();
             spacebarCount++;
             if (spacebarCount === 5) {
-              window.location.replace("badMarket.html"); // Reload the page after 5 spacebar presses
+              window.location.replace("mamaGoSlow.html"); // Reload the page after 5 spacebar presses
             }
           }
         })
@@ -145,15 +145,12 @@
 
         return (horizontalNear && verticalNear); 
       }
-
     }
-
     function resetEnemyPosition() {
       // Reset the enemy's position to a random location on the canvas
       myEnemy.x = Math.floor(Math.random() * (myGameArea.canvas.width - myEnemy.width));
       myEnemy.y = Math.floor(Math.random() * (myGameArea.canvas.height - myEnemy.height));
     }
-
     function updateGameArea() {
       myGameArea.clear();
 
